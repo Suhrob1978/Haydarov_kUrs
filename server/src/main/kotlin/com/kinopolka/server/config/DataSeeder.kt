@@ -9,7 +9,11 @@ import org.springframework.stereotype.Component
 @Component
 class DataSeeder(private val movies: MovieRepository) : CommandLineRunner {
 
+    private val greenMilePoster =
+        "https://image.tmdb.org/t/p/w500/ohXr0v9U0TfFu9IXbSDm5zoGV3R.jpg"
+
     override fun run(vararg args: String?) {
+        repairBrokenPosters()
         if (movies.count() > 0) return
         movies.saveAll(
             listOf(
@@ -21,7 +25,7 @@ class DataSeeder(private val movies: MovieRepository) : CommandLineRunner {
                     "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", 8.6),
                 Movie("Зелёная миля", 1999, "Драма, Фэнтези",
                     "Надзиратель блока смертников сталкивается с заключённым, обладающим необъяснимым даром.",
-                    "https://image.tmdb.org/t/p/w500/velWPhVMQt2krs5q8ARw4i5KsiM.jpg", 8.5),
+                    greenMilePoster, 8.5),
                 Movie("Бойцовский клуб", 1999, "Драма, Триллер",
                     "Офисный работник и харизматичный продавец мыла создают подпольный бойцовский клуб.",
                     "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg", 8.4),
@@ -93,5 +97,16 @@ class DataSeeder(private val movies: MovieRepository) : CommandLineRunner {
                     "https://image.tmdb.org/t/p/w500/8j58iEBw9pOXFD2L0nt0ZXeHviB.jpg", 7.4),
             )
         )
+    }
+
+    /** Исправляет устаревшие ссылки на постеры TMDB в уже созданной БД. */
+    private fun repairBrokenPosters() {
+        val brokenGreenMile = "velWPhVMQt2krs5q8ARw4i5KsiM.jpg"
+        movies.findAll()
+            .filter { it.title == "Зелёная миля" && it.posterUrl.contains(brokenGreenMile) }
+            .forEach {
+                it.posterUrl = greenMilePoster
+                movies.save(it)
+            }
     }
 }

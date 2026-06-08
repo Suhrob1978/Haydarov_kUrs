@@ -1,5 +1,6 @@
 package com.kinopolka.app.di
 
+import com.kinopolka.app.BuildConfig
 import com.kinopolka.app.data.remote.ApiService
 import com.kinopolka.app.data.remote.AuthInterceptor
 import dagger.Module
@@ -16,9 +17,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    // 10.0.2.2 — это localhost хост-машины с точки зрения Android-эмулятора.
-    private const val BASE_URL = "http://10.0.2.2:8080/"
 
     @Provides
     @Singleton
@@ -38,7 +36,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

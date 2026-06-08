@@ -11,6 +11,6 @@ class WebConfig(private val authInterceptor: AuthInterceptor) : WebMvcConfigurer
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authInterceptor)
             .addPathPatterns("/api/**")
-            .excludePathPatterns("/api/auth/**")
+            .excludePathPatterns("/api/auth/**", "/api/movies/*/poster")
     }
 }

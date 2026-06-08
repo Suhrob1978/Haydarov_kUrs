@@ -1,7 +1,9 @@
 package com.kinopolka.app.ui.common
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
@@ -12,16 +14,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.kinopolka.app.data.model.BacklogStatus
 
 @Composable
 fun PosterImage(url: String, modifier: Modifier = Modifier) {
-    AsyncImage(
+    SubcomposeAsyncImage(
         model = url.ifBlank { null },
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier,
+        loading = {
+            Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant), Alignment.Center) {
+                CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
+            }
+        },
+        error = {
+            Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant), Alignment.Center) {
+                Icon(Icons.Default.Movie, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        },
     )
 }
 

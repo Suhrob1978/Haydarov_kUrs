@@ -5,6 +5,9 @@ import com.kinopolka.server.service.AuthService
 import com.kinopolka.server.service.BacklogService
 import com.kinopolka.server.service.MovieService
 import jakarta.validation.Valid
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -33,6 +36,14 @@ class MovieController(private val movieService: MovieService) {
     @GetMapping
     fun catalog(@RequestParam(required = false) query: String?): List<MovieDto> =
         movieService.catalog(query)
+
+    @GetMapping("/{movieId}/poster")
+    fun poster(@PathVariable movieId: Long): ResponseEntity<ByteArray> {
+        val (bytes, contentType) = movieService.posterBytes(movieId)
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_TYPE, contentType)
+            .body(bytes)
+    }
 }
 
 @RestController

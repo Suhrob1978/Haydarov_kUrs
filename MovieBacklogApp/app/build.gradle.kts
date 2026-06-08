@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,14 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+// Эмулятор: 10.0.2.2. Телефон в той же Wi-Fi: IP ПК, например http://192.168.1.13:8080/
+val serverUrl = localProperties.getProperty("server.url", "http://10.0.2.2:8080/")
+    .let { if (it.endsWith("/")) it else "$it/" }
 
 android {
     namespace = "com.kinopolka.app"
@@ -17,6 +27,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"$serverUrl\"")
     }
 
     buildTypes {

@@ -2,6 +2,7 @@ package com.kinopolka.app.ui.backlog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kinopolka.app.data.AppEventBus
 import com.kinopolka.app.data.model.BacklogItem
 import com.kinopolka.app.data.model.BacklogStatus
 import com.kinopolka.app.data.model.UpdateBacklogRequest
@@ -24,6 +25,7 @@ data class BacklogUiState(
 @HiltViewModel
 class BacklogViewModel @Inject constructor(
     private val repo: BacklogRepository,
+    private val events: AppEventBus,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BacklogUiState())
@@ -31,6 +33,9 @@ class BacklogViewModel @Inject constructor(
 
     init {
         load()
+        viewModelScope.launch {
+            events.backlogChanged.collect { load() }
+        }
     }
 
     fun setFilter(status: BacklogStatus?) {
