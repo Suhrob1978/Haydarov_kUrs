@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kinopolka-server
+  datasource:
+    # File-based H2 database — survives restarts, no external DBMS needed.
+    url: jdbc:h2:file:./data/kinopolka
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+app:
+  jwt:
+    # Demo secret — base64, at least 256 bit. Replace in production.
+    secret: "Y2hhbmdlLW1lLWtpbm9wb2xrYS1zdXBlci1zZWNyZXQta2V5LTAxMjM0NTY3ODk="
+    expiration-ms: 604800000 # 7 days
+
+logging:
+  level:
+    org.hibernate.SQL: info

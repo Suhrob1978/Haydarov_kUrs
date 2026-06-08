@@ -1,0 +1,21 @@
+# --- Gradle ---
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# --- Android Studio / IntelliJ IDEA ---
+.idea/
+*.iml
+captures/
+.cxx/
+
+# --- Локальные настройки машины (путь к Android SDK и т.п.) ---
+local.properties
+
+# --- Данные сервера (файловая БД H2 создаётся при запуске) ---
+/server/data/
+
+# --- Логи и прочее ---
+*.log
+.DS_Store
+Thumbs.db
